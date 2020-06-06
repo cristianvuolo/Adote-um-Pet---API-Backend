@@ -14,7 +14,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::with('items')->get();
+        return User::with('items')->get()->map(function ($q) {
+            $q->image_url = $q->getFirstMediaUrl('image');
+            return $q;
+        });
     }
 
     /**
@@ -25,8 +28,13 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
+        $user = User::create($request->except('image'));
 
-        return User::create($request->all());
+        if($request->image) {
+            $user->addMediaFromRequest('image')->toMediaCollection('image');
+        }
+
+        return $user;
     }
 
 }

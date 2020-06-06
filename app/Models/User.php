@@ -14,4 +14,19 @@ class User extends Authenticatable implements HasMedia
 {
     use HasMediaTrait;
     use Notifiable;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'whatsapp',
+        'latitude',
+        'longitude',
+        'city',
+        'uf',
+    ];
+
+    public function items()
+    {
+        return $this->belongsToMany(Item::class, 'items_clients_pivot');
+    }
 }
